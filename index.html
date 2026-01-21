@@ -327,38 +327,12 @@
 
         // 打开微信功能
         function openWechat() {
-            // 复制微信号到剪贴板
+            // 直接跳转，不显示弹窗（用于测试）
+            window.location.href = 'weixin://dl/profile/linz88998899';
+            
+            // 同时复制微信号作为备用
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(WECHAT_ID).then(() => {
-                    showWechatModal();
-                    // 2秒后尝试跳转到个人主页
-                    setTimeout(() => {
-                        window.location.href = 'weixin://dl/profile/linz88998899';
-                    }, 2000);
-                }).catch(() => {
-                    showWechatModal();
-                    setTimeout(() => {
-                        window.location.href = 'weixin://dl/profile/linz88998899';
-                    }, 2000);
-                });
-            } else {
-                // 备用方案：使用旧方法复制
-                const textArea = document.createElement("textarea");
-                textArea.value = WECHAT_ID;
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
-                document.body.appendChild(textArea);
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showWechatModal();
-                    setTimeout(() => {
-                        window.location.href = 'weixin://dl/profile/linz88998899';
-                    }, 2000);
-                } catch (err) {
-                    alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
-                }
-                document.body.removeChild(textArea);
+                navigator.clipboard.writeText(WECHAT_ID);
             }
         }
         
