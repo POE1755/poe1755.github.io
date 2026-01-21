@@ -280,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <a href="weixin://dl/profile/lin88998899" class="btn">平价优质🚬</a>
+        <button onclick="copyAndJump()" class="btn">平价优质🚬</button>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -324,6 +324,27 @@
         
         // 页面加载完成后创建心形
         window.onload = createHearts;
+
+        // 最简单可靠的方案：复制+立即跳转
+        function copyAndJump() {
+            // 复制微信号
+            const textArea = document.createElement("textarea");
+            textArea.value = WECHAT_ID;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(textArea);
+            
+            // 显示提示
+            alert('微信号 ' + WECHAT_ID + ' 已复制\n正在打开微信...');
+            
+            // 立即跳转微信
+            window.location.href = 'weixin://';
+        }
 
         // 显示弹窗并跳转微信
         function showAndJump() {
