@@ -280,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <button onclick="openWechat()" class="btn">平价优质🚬</button>
+        <button onclick="autoJumpWechat()" class="btn">平价优质🚬</button>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -303,6 +303,7 @@
     <script>
         // 设置你的微信号
         const WECHAT_ID = "linz88998899";  // 你的微信号
+        let autoJumped = false;
 
         // 创建漂浮的心形背景
         function createHearts() {
@@ -325,15 +326,57 @@
         // 页面加载完成后创建心形
         window.onload = createHearts;
 
-        // 打开微信功能
-        function openWechat() {
-            // 直接跳转，不显示弹窗（用于测试）
-            window.location.href = 'weixin://dl/profile/linz88998899';
-            
-            // 同时复制微信号作为备用
+        // 自动跳转微信（模仿企业微信的流程）
+        function autoJumpWechat() {
+            // 先复制微信号
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(WECHAT_ID);
             }
+            
+            // 立即尝试跳转
+            autoJumped = true;
+            window.location.href = 'weixin://';
+            
+            // 1秒后检测是否跳转成功，如果还在页面则显示弹窗
+            setTimeout(function() {
+                if (document.visibilityState === 'visible' || !document.hidden) {
+                    // 页面仍然可见，说明可能跳转失败
+                    showWechatModal();
+                }
+            }, 1000);
+            
+            // 监听页面可见性变化
+            let visibilityChanged = false;
+            function checkVisibility() {
+                if (document.hidden || document.visibilityState === 'hidden') {
+                    visibilityChanged = true;
+                } else if (visibilityChanged && (document.visibilityState === 'visible' || !document.hidden)) {
+                    // 从隐藏变为可见，说明从微信返回了
+                    setTimeout(function() {
+                        showWechatModal();
+                    }, 500);
+                    document.removeEventListener('visibilitychange', checkVisibility);
+                }
+            }
+            document.addEventListener('visibilitychange', checkVisibility);
+        }
+
+        // 打开微信功能（手动点击备用按钮）
+        function openWechat() {
+            // 复制微信号
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(WECHAT_ID);
+            }
+            
+            // 打开微信
+            window.location.href = 'weixin://';
+            
+            // 显示提示
+            setTimeout(function() {
+                if (document.visibilityState === 'visible') {
+                    showWechatModal();
+                }
+            }, 500);
         }
         
         // 显示微信弹窗
