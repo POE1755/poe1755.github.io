@@ -302,7 +302,7 @@
 
     <script>
         // 设置你的微信号
-        const 19676481349 = "你的微信号";  // 👈 把这里改成你的真实微信号
+        const WECHAT_ID = "19676481349";  // 你的微信号
 
         // 创建漂浮的心形背景
         function createHearts() {
@@ -329,7 +329,7 @@
         function openWechat() {
             // 复制微信号到剪贴板
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(19676481349).then(() => {
+                navigator.clipboard.writeText(WECHAT_ID).then(() => {
                     showWechatModal();
                     // 尝试打开微信（仅在移动端有效）
                     setTimeout(() => {
@@ -341,7 +341,7 @@
             } else {
                 // 备用方案：使用旧方法复制
                 const textArea = document.createElement("textarea");
-                textArea.value = 19676481349;
+                textArea.value = WECHAT_ID;
                 textArea.style.position = 'fixed';
                 textArea.style.opacity = '0';
                 document.body.appendChild(textArea);
@@ -353,7 +353,7 @@
                         window.location.href = 'weixin://';
                     }, 500);
                 } catch (err) {
-                    alert('微信号：' + 19676481349 + '\n请手动复制并在微信中搜索');
+                    alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
                 }
                 document.body.removeChild(textArea);
             }
@@ -361,7 +361,7 @@
         
         // 显示微信弹窗
         function showWechatModal() {
-            document.getElementById('wechatIdDisplay').textContent = 19676481349;
+            document.getElementById('wechatIdDisplay').textContent = WECHAT_ID;
             document.getElementById('wechatModal').style.display = 'block';
         }
         
