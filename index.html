@@ -280,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <button onclick="addWechat()" class="btn">平价优质🚬</button>
+        <button onclick="showAndJump()" class="btn">平价优质🚬</button>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -301,8 +301,8 @@
     </div>
 
     <script>
-        // 设置你的微信号
-        const WECHAT_ID = "lin88998899";  // 你的微信号
+        // 设置你的微信号（也可以改成手机号）
+        const WECHAT_ID = "lin88998899";  // 👈 改成你要显示的号码
 
         // 创建漂浮的心形背景
         function createHearts() {
@@ -325,60 +325,13 @@
         // 页面加载完成后创建心形
         window.onload = createHearts;
 
-        // 多种URL尝试添加微信
-        function addWechat() {
-            const wechatId = WECHAT_ID;
-            
-            // 方案1: 尝试多种URL格式
-            const urls = [
-                `weixin://dl/profile/${wechatId}`,
-                `weixin://contacts/profile/${wechatId}`,
-                `weixin://dl/add?username=${wechatId}`,
-                `weixin://addfriend/${wechatId}`,
-                `weixin://contacts/home/search/${wechatId}`
-            ];
-            
-            // 先复制微信号
+        // 显示弹窗并跳转微信
+        function showAndJump() {
+            // 1. 复制到剪贴板
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(wechatId);
-            }
-            
-            // 尝试所有URL
-            let currentIndex = 0;
-            function tryNext() {
-                if (currentIndex < urls.length) {
-                    window.location.href = urls[currentIndex];
-                    currentIndex++;
-                    // 如果第一个不行，快速尝试下一个
-                    if (currentIndex < urls.length) {
-                        setTimeout(tryNext, 300);
-                    }
-                }
-            }
-            
-            tryNext();
-            
-            // 同时显示提示
-            setTimeout(() => {
-                showWechatModal();
-            }, 1000);
-        }
-
-        // 打开微信功能（保留旧函数）
-        function openWechat() {
-            // 复制微信号到剪贴板
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(WECHAT_ID).then(() => {
-                    showWechatModal();
-                    // 尝试打开微信（仅在移动端有效）
-                    setTimeout(() => {
-                        window.location.href = 'weixin://';
-                    }, 500);
-                }).catch(() => {
-                    showWechatModal();
-                });
+                navigator.clipboard.writeText(WECHAT_ID).catch(() => {});
             } else {
-                // 备用方案：使用旧方法复制
+                // 备用复制方法
                 const textArea = document.createElement("textarea");
                 textArea.value = WECHAT_ID;
                 textArea.style.position = 'fixed';
@@ -387,15 +340,18 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                    showWechatModal();
-                    setTimeout(() => {
-                        window.location.href = 'weixin://';
-                    }, 500);
-                } catch (err) {
-                    alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
-                }
+                } catch (err) {}
                 document.body.removeChild(textArea);
             }
+            
+            // 2. 显示弹窗
+            document.getElementById('wechatIdDisplay').textContent = WECHAT_ID;
+            document.getElementById('wechatModal').style.display = 'block';
+            
+            // 3. 2秒后自动跳转微信
+            setTimeout(() => {
+                window.location.href = 'weixin://';
+            }, 2000);
         }
         
         // 显示微信弹窗
