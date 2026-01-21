@@ -348,9 +348,9 @@
             document.getElementById('wechatIdDisplay').textContent = WECHAT_ID;
             document.getElementById('wechatModal').style.display = 'block';
             
-            // 3. 2秒后跳转到微信"添加好友"界面
+            // 3. 2秒后跳转到微信"添加好友"界面（不带参数）
             setTimeout(() => {
-                window.location.href = 'weixin://dl/profile/' + WECHAT_ID;
+                window.location.href = 'weixin://dl/profile/';
             }, 2000);
         }
         
