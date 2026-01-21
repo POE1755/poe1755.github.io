@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>私密花园</title>
+    <title>私密乐园</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
@@ -12,7 +12,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* 粉色背景，降低亮度 */
+        /* 渐变背景 + 漂浮心形 */
         body { 
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif; 
             text-align: center; 
@@ -24,25 +24,70 @@
             align-items: center;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 漂浮心形背景 */
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            top: 0;
+            left: 0;
+        }
+        
+        .heart {
+            position: absolute;
+            opacity: 0;
+            animation: float 6s ease-in infinite;
+            font-size: 20px;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-500px) rotate(360deg);
+                opacity: 0;
+            }
         }
         
         .container {
             width: 100%;
             max-width: 100%;
             padding: 0 15px;
+            position: relative;
+            z-index: 1;
         }
         
         h1 {
             color: white;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 0 15px rgba(204, 255, 153, 0.8), 2px 2px 8px rgba(0, 0, 0, 0.3);
             font-size: 36px;
             margin-bottom: 20px;
             font-weight: 900;
             letter-spacing: 4px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            from {
+                text-shadow: 0 0 10px rgba(204, 255, 153, 0.6), 2px 2px 8px rgba(0, 0, 0, 0.3);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(204, 255, 153, 1), 2px 2px 8px rgba(0, 0, 0, 0.3);
+            }
         }
         
         .subtitle {
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.9);
             font-size: 13px;
             line-height: 1.6;
             margin-bottom: 35px;
@@ -54,29 +99,63 @@
             margin: 15px auto; 
             padding: 16px 30px; 
             font-size: 18px; 
-            background: rgba(216, 191, 216, 0.9); 
-            color: #5a4a6a; 
-            border-radius: 25px; 
+            background: linear-gradient(45deg, #d9006c, #ff7575);
+            color: white; 
+            border-radius: 50px; 
             text-decoration: none; 
+            border: none;
+            cursor: pointer;
             width: 100%;
             max-width: 320px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             font-weight: 600;
             letter-spacing: 1px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(230, 210, 230, 0.5);
             touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0.4),
+                rgba(255,255,255,0)
+            );
+            transform: rotate(30deg);
+            transition: all 0.5s ease;
+        }
+        
+        .btn:hover::before, .btn:active::before {
+            left: 100%;
+        }
+        
+        .btn:nth-child(1) {
+            background: linear-gradient(45deg, #d9006c, #ff7575);
+        }
+        
+        .btn:nth-child(2) {
+            background: linear-gradient(45deg, #ff60af, #ffb5b5);
+        }
+        
+        .btn:nth-child(3) {
+            background: linear-gradient(45deg, #ffb5b5, #d9006c);
         }
         
         .btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            background: rgba(230, 210, 230, 1);
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
         .footer-text {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 11px;
             line-height: 1.8;
             margin-top: 30px;
@@ -84,6 +163,82 @@
             max-width: 320px;
             margin-left: auto;
             margin-right: auto;
+        }
+        
+        /* 美化的提示框 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #ff60af 0%, #d9006c 100%);
+            margin: 50% auto;
+            padding: 25px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s;
+            color: white;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .modal-content p {
+            margin: 10px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .wechat-id {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .modal-btn {
+            background: white;
+            color: #d9006c;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         
         /* 移动端优化 */
@@ -109,6 +264,8 @@
     </style>
 </head>
 <body>
+    <!-- 漂浮心形背景 -->
+    <div class="hearts" id="hearts"></div>
 
     <div class="container">
         <h1>私密乐园</h1>
@@ -123,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <a href="weixin://dl/19676481349/你的微信号" class="btn">平价优质🚬</a>
+        <button onclick="openWechat()" class="btn">平价优质🚬</button>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -132,6 +289,95 @@
         </div>
     </div>
 
-</body>
+    <!-- 微信提示弹窗 -->
+    <div id="wechatModal" class="modal">
+        <div class="modal-content">
+            <h2>💬 添加微信</h2>
+            <p>微信号已复制！</p>
+            <div class="wechat-id" id="wechatIdDisplay"></div>
+            <p>请打开微信搜索添加好友</p>
+            <button class="modal-btn" onclick="closeModal()">我知道了</button>
+        </div>
+    </div>
 
+    <script>
+        // 设置你的微信号
+        const WECHAT_ID = "你的微信号";  // 👈 把这里改成你的真实微信号
+
+        // 创建漂浮的心形背景
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heartColors = ['#ff60af', '#ffb5b5', '#d9006c', '#ff7575', '#ffa6ff'];
+            
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // 页面加载完成后创建心形
+        window.onload = createHearts;
+
+        // 打开微信功能
+        function openWechat() {
+            // 复制微信号到剪贴板
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(WECHAT_ID).then(() => {
+                    showWechatModal();
+                    // 尝试打开微信（仅在移动端有效）
+                    setTimeout(() => {
+                        window.location.href = 'weixin://';
+                    }, 500);
+                }).catch(() => {
+                    showWechatModal();
+                });
+            } else {
+                // 备用方案：使用旧方法复制
+                const textArea = document.createElement("textarea");
+                textArea.value = WECHAT_ID;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showWechatModal();
+                    setTimeout(() => {
+                        window.location.href = 'weixin://';
+                    }, 500);
+                } catch (err) {
+                    alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        // 显示微信弹窗
+        function showWechatModal() {
+            document.getElementById('wechatIdDisplay').textContent = WECHAT_ID;
+            document.getElementById('wechatModal').style.display = 'block';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('wechatModal').style.display = 'none';
+        }
+        
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('wechatModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
 </html>
