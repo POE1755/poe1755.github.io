@@ -280,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <button onclick="copyAndJump()" class="btn">平价优质🚬</button>
+        <a href="weixin://dl/profile/lin88998899" class="btn">平价优质🚬</a>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -301,8 +301,8 @@
     </div>
 
     <script>
-        // 设置你的微信号（也可以改成手机号）
-        const WECHAT_ID = "lin88998899";  // 👈 改成你要显示的号码
+        // 设置你的微信号
+        const WECHAT_ID = "lin88998899";  // 你的微信号
 
         // 创建漂浮的心形背景
         function createHearts() {
@@ -325,34 +325,21 @@
         // 页面加载完成后创建心形
         window.onload = createHearts;
 
-        // 最简单可靠的方案：复制+立即跳转
-        function copyAndJump() {
-            // 复制微信号
-            const textArea = document.createElement("textarea");
-            textArea.value = WECHAT_ID;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-            } catch (err) {}
-            document.body.removeChild(textArea);
-            
-            // 显示提示
-            alert('微信号 ' + WECHAT_ID + ' 已复制\n正在打开微信添加朋友...');
-            
-            // 尝试跳转到添加朋友界面
-            window.location.href = 'weixin://dl/profile/' + WECHAT_ID;
-        }
-
-        // 显示弹窗并跳转微信
-        function showAndJump() {
-            // 1. 复制到剪贴板
+        // 打开微信功能
+        function openWechat() {
+            // 复制微信号到剪贴板
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(WECHAT_ID).catch(() => {});
+                navigator.clipboard.writeText(WECHAT_ID).then(() => {
+                    showWechatModal();
+                    // 尝试打开微信（仅在移动端有效）
+                    setTimeout(() => {
+                        window.location.href = 'weixin://';
+                    }, 500);
+                }).catch(() => {
+                    showWechatModal();
+                });
             } else {
-                // 备用复制方法
+                // 备用方案：使用旧方法复制
                 const textArea = document.createElement("textarea");
                 textArea.value = WECHAT_ID;
                 textArea.style.position = 'fixed';
@@ -361,19 +348,15 @@
                 textArea.select();
                 try {
                     document.execCommand('copy');
-                } catch (err) {}
+                    showWechatModal();
+                    setTimeout(() => {
+                        window.location.href = 'weixin://';
+                    }, 500);
+                } catch (err) {
+                    alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
+                }
                 document.body.removeChild(textArea);
             }
-            
-            // 2. 显示弹窗
-            document.getElementById('wechatIdDisplay').textContent = WECHAT_ID;
-            document.getElementById('wechatModal').style.display = 'block';
-            
-            // 3. 2秒后跳转到微信"添加好友"界面
-            setTimeout(() => {
-                // 跳转到添加朋友界面
-                window.location.href = 'weixin://dl/profile/lin88998899';
-            }, 2000);
         }
         
         // 显示微信弹窗
