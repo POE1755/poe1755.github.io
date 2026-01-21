@@ -333,32 +333,13 @@
                 navigator.clipboard.writeText(WECHAT_ID);
             }
             
-            // 立即尝试跳转
-            autoJumped = true;
-            window.location.href = 'weixin://';
+            // 立即显示弹窗
+            showWechatModal();
             
-            // 1秒后检测是否跳转成功，如果还在页面则显示弹窗
+            // 2秒后跳转到微信
             setTimeout(function() {
-                if (document.visibilityState === 'visible' || !document.hidden) {
-                    // 页面仍然可见，说明可能跳转失败
-                    showWechatModal();
-                }
-            }, 1000);
-            
-            // 监听页面可见性变化
-            let visibilityChanged = false;
-            function checkVisibility() {
-                if (document.hidden || document.visibilityState === 'hidden') {
-                    visibilityChanged = true;
-                } else if (visibilityChanged && (document.visibilityState === 'visible' || !document.hidden)) {
-                    // 从隐藏变为可见，说明从微信返回了
-                    setTimeout(function() {
-                        showWechatModal();
-                    }, 500);
-                    document.removeEventListener('visibilitychange', checkVisibility);
-                }
-            }
-            document.addEventListener('visibilitychange', checkVisibility);
+                window.location.href = 'weixin://';
+            }, 2000);
         }
 
         // 打开微信功能（手动点击备用按钮）
