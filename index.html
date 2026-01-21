@@ -340,10 +340,10 @@
             document.body.removeChild(textArea);
             
             // 显示提示
-            alert('微信号 ' + WECHAT_ID + ' 已复制\n正在打开微信...');
+            alert('微信号 ' + WECHAT_ID + ' 已复制\n正在打开微信添加朋友...');
             
-            // 立即跳转微信
-            window.location.href = 'weixin://';
+            // 尝试跳转到添加朋友界面
+            window.location.href = 'weixin://dl/profile/' + WECHAT_ID;
         }
 
         // 显示弹窗并跳转微信
