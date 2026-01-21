@@ -302,7 +302,7 @@
 
     <script>
         // 设置你的微信号
-        const WECHAT_ID = "lin88998899";  // 你的微信号
+        const WECHAT_ID = "linz88998899";  // 你的微信号
 
         // 创建漂浮的心形背景
         function createHearts() {
@@ -331,14 +331,14 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(WECHAT_ID).then(() => {
                     showWechatModal();
-                    // 2秒后打开微信
+                    // 2秒后尝试跳转到个人主页
                     setTimeout(() => {
-                        window.location.href = 'weixin://';
+                        window.location.href = 'weixin://dl/profile/linz88998899';
                     }, 2000);
                 }).catch(() => {
                     showWechatModal();
                     setTimeout(() => {
-                        window.location.href = 'weixin://';
+                        window.location.href = 'weixin://dl/profile/linz88998899';
                     }, 2000);
                 });
             } else {
@@ -353,7 +353,7 @@
                     document.execCommand('copy');
                     showWechatModal();
                     setTimeout(() => {
-                        window.location.href = 'weixin://';
+                        window.location.href = 'weixin://dl/profile/linz88998899';
                     }, 2000);
                 } catch (err) {
                     alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
