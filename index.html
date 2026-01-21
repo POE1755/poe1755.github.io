@@ -331,14 +331,14 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(WECHAT_ID).then(() => {
                     showWechatModal();
-                    // 尝试打开微信添加朋友页面
+                    // 尝试打开微信
                     setTimeout(() => {
-                        window.location.href = 'weixin://dl/add';
+                        window.location.href = 'weixin://';
                     }, 500);
                 }).catch(() => {
                     showWechatModal();
                     setTimeout(() => {
-                        window.location.href = 'weixin://dl/add';
+                        window.location.href = 'weixin://';
                     }, 500);
                 });
             } else {
@@ -353,7 +353,7 @@
                     document.execCommand('copy');
                     showWechatModal();
                     setTimeout(() => {
-                        window.location.href = 'weixin://dl/add';
+                        window.location.href = 'weixin://';
                     }, 500);
                 } catch (err) {
                     alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
