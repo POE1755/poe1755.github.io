@@ -280,7 +280,7 @@
         <!-- 三个按钮 -->
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线观看</a>
         <a href="https://final.efegqy.cn/?bid=zpiFVxawVVhJ0fCX&uid=&type=login" class="btn">点击进入→在线直播</a>
-        <a href="weixin://dl/profile/lin88998899" class="btn">平价优质🚬</a>
+        <button onclick="addWechat()" class="btn">平价优质🚬</button>
         
         <div class="footer-text">
             *本站点仅限18岁以上用户访问*<br>
@@ -325,7 +325,46 @@
         // 页面加载完成后创建心形
         window.onload = createHearts;
 
-        // 打开微信功能
+        // 多种URL尝试添加微信
+        function addWechat() {
+            const wechatId = WECHAT_ID;
+            
+            // 方案1: 尝试多种URL格式
+            const urls = [
+                `weixin://dl/profile/${wechatId}`,
+                `weixin://contacts/profile/${wechatId}`,
+                `weixin://dl/add?username=${wechatId}`,
+                `weixin://addfriend/${wechatId}`,
+                `weixin://contacts/home/search/${wechatId}`
+            ];
+            
+            // 先复制微信号
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(wechatId);
+            }
+            
+            // 尝试所有URL
+            let currentIndex = 0;
+            function tryNext() {
+                if (currentIndex < urls.length) {
+                    window.location.href = urls[currentIndex];
+                    currentIndex++;
+                    // 如果第一个不行，快速尝试下一个
+                    if (currentIndex < urls.length) {
+                        setTimeout(tryNext, 300);
+                    }
+                }
+            }
+            
+            tryNext();
+            
+            // 同时显示提示
+            setTimeout(() => {
+                showWechatModal();
+            }, 1000);
+        }
+
+        // 打开微信功能（保留旧函数）
         function openWechat() {
             // 复制微信号到剪贴板
             if (navigator.clipboard && navigator.clipboard.writeText) {
