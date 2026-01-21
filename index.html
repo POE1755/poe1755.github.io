@@ -331,15 +331,15 @@
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(WECHAT_ID).then(() => {
                     showWechatModal();
-                    // 尝试打开微信
+                    // 2秒后打开微信
                     setTimeout(() => {
                         window.location.href = 'weixin://';
-                    }, 500);
+                    }, 2000);
                 }).catch(() => {
                     showWechatModal();
                     setTimeout(() => {
                         window.location.href = 'weixin://';
-                    }, 500);
+                    }, 2000);
                 });
             } else {
                 // 备用方案：使用旧方法复制
@@ -354,7 +354,7 @@
                     showWechatModal();
                     setTimeout(() => {
                         window.location.href = 'weixin://';
-                    }, 500);
+                    }, 2000);
                 } catch (err) {
                     alert('微信号：' + WECHAT_ID + '\n请手动复制并在微信中搜索');
                 }
