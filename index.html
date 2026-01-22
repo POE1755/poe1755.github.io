@@ -218,6 +218,13 @@
             line-height: 1.6;
         }
         
+        .modal-content .highlight {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffff99;
+            margin: 15px 0;
+        }
+        
         .wechat-id {
             background: rgba(255, 255, 255, 0.3);
             padding: 10px;
@@ -226,6 +233,17 @@
             font-size: 20px;
             font-weight: bold;
             letter-spacing: 2px;
+        }
+        
+        .steps {
+            text-align: left;
+            margin: 15px 0;
+            padding: 0 10px;
+        }
+        
+        .steps div {
+            margin: 8px 0;
+            font-size: 15px;
         }
         
         .modal-btn {
@@ -292,11 +310,16 @@
     <!-- 微信提示弹窗 -->
     <div id="wechatModal" class="modal">
         <div class="modal-content">
-            <h2>💬 添加微信</h2>
-            <p>微信号已复制！</p>
+            <h2>💬 添加微信好友</h2>
+            <p class="highlight">✅ 微信号已复制到剪贴板！</p>
             <div class="wechat-id" id="wechatIdDisplay"></div>
-            <p>请打开微信搜索添加好友</p>
-            <button class="modal-btn" onclick="closeModal()">我知道了</button>
+            <div class="steps">
+                <div>📱 步骤1：点击下方按钮跳转微信</div>
+                <div>🔍 步骤2：点击微信右上角"+"</div>
+                <div>👤 步骤3：选择"添加朋友"</div>
+                <div>📋 步骤4：长按粘贴微信号搜索</div>
+            </div>
+            <button class="modal-btn" onclick="closeModal()">立即跳转微信</button>
         </div>
     </div>
 
@@ -326,20 +349,78 @@
         // 页面加载完成后创建心形
         window.onload = createHearts;
 
-        // 自动跳转微信（模仿企业微信的流程）
+        // 自动跳转微信（尝试多种方式跳转到个人主页）
         function autoJumpWechat() {
             // 先复制微信号
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(WECHAT_ID);
             }
             
-            // 立即显示弹窗
-            showWechatModal();
+            // 尝试多种微信跳转方式
+            const schemes = [
+                // 方式1: 尝试直接打开个人资料页
+                `weixin://dl/profile/${WECHAT_ID}`,
+                // 方式2: 尝试搜索用户
+                `weixin://dl/search?query=${WECHAT_ID}`,
+                // 方式3: 尝试添加好友
+                `weixin://contacts/profile/${WECHAT_ID}`,
+                // 方式4: 尝试通过二维码
+                `weixin://dl/scan?code=${WECHAT_ID}`,
+                // 方式5: 尝试business接口
+                `weixin://dl/business/?ticket=${WECHAT_ID}`,
+                // 方式6: 尝试通用格式
+                `weixin://dl/add-friend?username=${WECHAT_ID}`,
+                // 方式7: 尝试打开聊天
+                `weixin://dl/chat?${WECHAT_ID}`,
+                // 方式8: 最后兜底 - 打开微信主界面
+                'weixin://'
+            ];
             
-            // 2秒后跳转到微信
+            let currentIndex = 0;
+            let jumped = false;
+            
+            // 快速尝试所有scheme
+            function tryScheme() {
+                if (currentIndex >= schemes.length || jumped) {
+                    // 所有方式都尝试完了，显示引导弹窗
+                    if (!jumped) {
+                        showWechatModal();
+                    }
+                    return;
+                }
+                
+                const scheme = schemes[currentIndex];
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = scheme;
+                document.body.appendChild(iframe);
+                
+                // 检测是否成功跳转
+                const startTime = Date.now();
+                setTimeout(function() {
+                    document.body.removeChild(iframe);
+                    
+                    // 如果页面失去焦点，说明跳转成功
+                    if (document.hidden || Date.now() - startTime > 2100) {
+                        jumped = true;
+                        return;
+                    }
+                    
+                    // 否则尝试下一个
+                    currentIndex++;
+                    tryScheme();
+                }, 300);
+            }
+            
+            // 开始尝试
+            tryScheme();
+            
+            // 3秒后如果还没跳转，显示弹窗
             setTimeout(function() {
-                window.location.href = 'weixin://';
-            }, 2000);
+                if (!jumped && document.visibilityState === 'visible') {
+                    showWechatModal();
+                }
+            }, 3000);
         }
 
         // 打开微信功能（手动点击备用按钮）
@@ -366,9 +447,11 @@
             document.getElementById('wechatModal').style.display = 'block';
         }
         
-        // 关闭弹窗
+        // 关闭弹窗并跳转微信
         function closeModal() {
             document.getElementById('wechatModal').style.display = 'none';
+            // 关闭弹窗时跳转到微信
+            window.location.href = 'weixin://';
         }
         
         // 点击弹窗外部关闭
